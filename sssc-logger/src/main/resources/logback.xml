@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_HOME" value="d:/sssc-flink/logs" />
+<!--    <property name="LOG_HOME" value="d:/sssc-flink/logs" />-->
+    <property name="LOG_HOME" value="/opt/sssc-flink/rt_applog/logs" />
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%msg%n</pattern>
