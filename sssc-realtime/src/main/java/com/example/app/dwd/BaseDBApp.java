@@ -33,6 +33,7 @@ public class BaseDBApp {
         // 2. 消费kafka ods_base_db 主题数据创建流
         String sourceTopic = "ods_base_db";
         String groupId = "base_db_app";
+        // 下面这行代码，搞得kafka配置相关
         DataStreamSource<String> kafkaDS = env.addSource(MyKafkaUtil.getKafkaConsumer(sourceTopic, groupId));
         // 3. 将每行数据转换为JSON对象并过滤（去掉delete）  主流
         SingleOutputStreamOperator<JSONObject> jsonObjDS = kafkaDS.map(JSON::parseObject)
@@ -63,8 +64,13 @@ public class BaseDBApp {
                 .deserializer(new CustomerDeserialization())
                 .build();
         DataStreamSource<String> tableSource = env.addSource(sourceFunction);
-        // 这里的String存的是tableProcess中的联合主键（source_table和operate_type）
+        // 这里的String存的是tableProcess中的联合主键（source_table和operate_type）            mapStateDescriptor 主要用于状态相关的需求
         MapStateDescriptor mapStateDescriptor = new MapStateDescriptor<String, TableProcess>("map-state",String.class,TableProcess.class);
+
+//        在日常Flink开发中，有时需要给正在运行中的Flink程序修改参数，比如过滤一些字段、字段值等，而这些值有时是配置在Mysql中的，
+//        但如果进行高吞吐计算的Function中动态查询配置文件有可能使任务阻塞，甚至导致任务出现失败的情况。
+//        遇到上述场景时，可以考虑通过广播流查询配置文件，广播到某个operator的所有并发实例中，然后与另一个条流数据连接进行计算。
+        // mysql中的配置表一旦变更，则将立即以广播的形式发送给正在工作的flink，及时修改参数，不需要停止，且继续工作
         BroadcastStream<String> broadcastStream = tableSource.broadcast(mapStateDescriptor);
         // 5. 连接主流和广播流
         BroadcastConnectedStream<JSONObject, String> connectedStream = jsonObjDS.connect(broadcastStream);
