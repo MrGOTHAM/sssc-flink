@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="sssc-logger" />
         <module name="sssc-flink-cdc" />
+        <module name="sssc-realtime" />
       </profile>
     </annotationProcessing>
   </component>
