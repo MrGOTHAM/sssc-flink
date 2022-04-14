@@ -1,12 +1,14 @@
 package com.example.app.dwd;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONAware;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ververica.cdc.connectors.mysql.MySQLSource;
 import com.alibaba.ververica.cdc.connectors.mysql.table.StartupOptions;
 import com.alibaba.ververica.cdc.debezium.DebeziumSourceFunction;
 import com.esotericsoftware.minlog.Log;
 import com.example.app.function.CustomerDeserialization;
+import com.example.app.function.DimSinkFunction;
 import com.example.app.function.TableProcessFunction;
 import com.example.bean.TableProcess;
 import com.example.utils.MyKafkaUtil;
@@ -15,7 +17,12 @@ import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.connector.jdbc.JdbcSink;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
+import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
 import org.apache.flink.util.OutputTag;
+import org.apache.kafka.clients.producer.ProducerRecord;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -25,6 +32,10 @@ import org.apache.flink.util.OutputTag;
  * Time: 16:49
  * Description:
  */
+// 数据流：web/app--->nginx----->Springboot----->FlinkAPP------>kafka(ods)----->flinkAPP----->kafka(dwd)/phoenix(dim)
+// 程序：    数据流中前三个阶段使用 mockDB代替------》mysql------>flinkcdc------>kafka(zk)------>baseDBApp----->kafka/phoenix(hbase,zk,hdfs)
+
+
 public class BaseDBApp {
     public static void main(String[] args) throws Exception {
         // 1. 获取执行环境
@@ -84,7 +95,14 @@ public class BaseDBApp {
         kafka.print("kafka>>>>>>>>>>>>");
         hbase.print("hbase>>>>>>>>>>>>>>");
 
-//        hbase.addSink(JdbcSink.sink())
+        hbase.addSink(new DimSinkFunction());
+        kafka.addSink(MyKafkaUtil.getKafkaProducer(new KafkaSerializationSchema<JSONObject>() {
+            @Override
+            public ProducerRecord<byte[], byte[]> serialize(JSONObject jsonObject, @Nullable Long aLong) {
+                return new ProducerRecord<byte[], byte[]>(jsonObject.getString("sinkTable"),
+                        jsonObject.getString("after").getBytes());
+            }
+        }));
         // 9. 启动任务
         env.execute("BaseDBApp");
     }
