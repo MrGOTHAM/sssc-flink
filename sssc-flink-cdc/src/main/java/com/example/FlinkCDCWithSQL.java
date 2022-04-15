@@ -30,10 +30,10 @@ public class FlinkCDCWithSQL {
                         " logo_url STRING" +
                         ") WITH (" +
                         " 'connector' = 'mysql-cdc'," +
-                        " 'hostname' = 'an'," +
+                        " 'hostname' = 'tu'," +
                         " 'port' = '3306'," +
                         " 'username' = 'root'," +
-                        " 'password' = '123456'," +
+                        " 'password' = 'tu123456'," +
                         " 'database-name' = 'gmall-flink-sssc'," +
                         " 'table-name' = 'base_trademark'" +
                         ")");

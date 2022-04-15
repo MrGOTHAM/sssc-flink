@@ -34,10 +34,10 @@ public class FlinkCDC {
 
         // 2. 通过FlinkCDC构建SourceFunction并读取数据
         DebeziumSourceFunction<String> sourceFunction = MySQLSource.<String>builder()
-                .hostname("an")
+                .hostname("tu")
                 .port(3306)
                 .username("root")
-                .password("123456")
+                .password("tu123456")
                 .databaseList("gmall-flink-sssc")
                 //.tableList("gmall-flink-sssc.base_trademark")                // 因为要监控整个库
                 .deserializer(new CustomerDeserialization())

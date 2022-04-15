@@ -22,10 +22,10 @@ public class FlinkCDCWithCustomerDeserialization {
 
         // 2. 通过FlinkCDC构建SourceFunction并读取数据
         DebeziumSourceFunction<String> sourceFunction = MySQLSource.<String>builder()
-                .hostname("an")
+                .hostname("tu")
                 .port(3306)
                 .username("root")
-                .password("123456")
+                .password("tu123456")
                 .databaseList("gmall-flink-sssc")
                 .tableList("gmall-flink-sssc.base_trademark")                // 如果不添加该参数，则为监视这个数据库下的所有表
                 .deserializer(new CustomerDeserialization())

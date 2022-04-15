@@ -65,10 +65,10 @@ public class BaseDBApp {
          * order_info       update                          kafka   dwd_xxb
          */
         DebeziumSourceFunction<String> sourceFunction = MySQLSource.<String>builder()
-                .hostname("an")
+                .hostname("tu")
                 .port(3306)
                 .username("root")
-                .password("123456")
+                .password("tu123456")
                 .databaseList("gmall-flink-sssc-realtime")
                 .tableList("gmall-flink-sssc-realtime.table_process")
                 .startupOptions(StartupOptions.initial())
