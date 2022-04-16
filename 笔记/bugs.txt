@@ -1,0 +1,5 @@
+HiveOnSpark：bug
+    datediff over 子查询 =》 NullPoint
+    解决方案：
+        1.换MR引擎
+        2.将时间字段由String类型改为Date类型
