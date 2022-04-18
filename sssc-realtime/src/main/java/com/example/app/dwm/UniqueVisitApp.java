@@ -9,8 +9,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.utils.MyKafkaUtil;
 import lombok.val;
 import org.apache.flink.api.common.functions.RichFilterFunction;
+import org.apache.flink.api.common.state.StateTtlConfig;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.time.Time;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
@@ -18,6 +20,8 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.text.SimpleDateFormat;
+// 数据流：web/app--->nginx----->Springboot----->FlinkAPP------>kafka(ods)----->flinkAPP----->kafka(dwd)/phoenix(dim)--->FlinkApp -> kafka(dwm)
+// 程序：    数据流中前三个阶段使用 mockDB代替------》mysql------>flinkcdc------>kafka(zk)------>baseDBApp----->kafka/phoenix(hbase,zk,hdfs) ->UniqueVisitApp
 
 public class UniqueVisitApp {
 
@@ -43,6 +47,12 @@ public class UniqueVisitApp {
             @Override
             public void open(Configuration parameters) throws Exception {
                 ValueStateDescriptor<String> valueStateDescriptor = new ValueStateDescriptor<>("date-state", String.class);
+                // 设置状态的超时时间 以及 更新时间的方式
+                StateTtlConfig stateTtlConfig = new StateTtlConfig.Builder(Time.hours(24))
+                        .setUpdateType(StateTtlConfig.UpdateType.OnCreateAndWrite)
+                        .build();
+                valueStateDescriptor.enableTimeToLive(stateTtlConfig);
+
                 dateState = getRuntimeContext().getState(valueStateDescriptor);
                 sdf = new SimpleDateFormat("yyyy-MM-dd");
             }
