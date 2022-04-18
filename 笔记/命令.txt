@@ -1,0 +1,14 @@
+Kafka:
+    bin/kafka-server-start.sh -daemon config/server.properties
+    bin/kafka-console-producer.sh --broker-list an:9092 --topic ods_base_log
+    bin/kafka-console-consumer.sh --bootstrap-server an:9092 --topic dwd_start_log
+    bin/kafka-console-consumer.sh --bootstrap-server an:9092 --topic dwd_page_log
+    bin/kafka-console-consumer.sh --bootstrap-server an:9092 --topic dwd_display_log
+
+Phoenix
+    连接hbase    bin/sqlline.py
+
+
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone 8","mid":"mid_993","os":"iOS 13.3.1","uid":"3793","vc":"v2.1.111"},"page":{"during_time":15835,"page_id":"search"},"ts":1608281724010}
+
+{"common":{"ar":"440000","ba":"iPhone","ch":"Appstore","is_new":"0","md":"iPhone 8","mid":"mid_993","os":"iOS 13.3.1","uid":"3793","vc":"v2.1.111"},"page":{"during_time":15835,"page_id":"search"},"ts":1608281737010}
