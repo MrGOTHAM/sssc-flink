@@ -1,12 +1,10 @@
 package com.example.app.dwd;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONAware;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.ververica.cdc.connectors.mysql.MySQLSource;
 import com.alibaba.ververica.cdc.connectors.mysql.table.StartupOptions;
 import com.alibaba.ververica.cdc.debezium.DebeziumSourceFunction;
-import com.esotericsoftware.minlog.Log;
 import com.example.app.function.CustomerDeserialization;
 import com.example.app.function.DimSinkFunction;
 import com.example.app.function.TableProcessFunction;
@@ -14,10 +12,8 @@ import com.example.bean.TableProcess;
 import com.example.utils.MyKafkaUtil;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.connector.jdbc.JdbcSink;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
 import org.apache.flink.util.OutputTag;
 import org.apache.kafka.clients.producer.ProducerRecord;

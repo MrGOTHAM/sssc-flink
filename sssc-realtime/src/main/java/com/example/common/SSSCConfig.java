@@ -12,6 +12,6 @@ public class SSSCConfig {
 
     public static final String PHOENIX_DRIVER = "org.apache.phoenix.jdbc.PhoenixDriver";
 
-    public static final String PHOENIX_SERVER = "jdbc:phoenix:an,tao,tu:2181";
+    public static final String PHOENIX_SERVER = "jdbc:phoenix:an:2181";
 
 }

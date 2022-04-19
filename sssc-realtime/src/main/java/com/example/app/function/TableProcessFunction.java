@@ -51,6 +51,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
 //        1. 获取并解析数据
         JSONObject jsonObject = JSONObject.parseObject(s);
         String after = jsonObject.getString("after");
+        // 这个after中的数据是以下划线命名的，但是TableProcess中是驼峰命名的，代表JSON可以转换驼峰和下划线
         TableProcess tableProcess = JSON.parseObject(after, TableProcess.class);
 //        2.建表
         if (TableProcess.SINK_TYPE_HBASE.equals(tableProcess.getSinkType())) {
