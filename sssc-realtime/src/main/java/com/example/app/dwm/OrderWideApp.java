@@ -207,7 +207,7 @@ public class OrderWideApp {
         orderWideWithCategory3DS.print("orderWideWithCategory3DS>>>>>>>>>>");
 
         // 5. 将数据写入Kafka
-        orderWideWithCategory3DS.map(JSONObject::toJSONString).addSink(MyKafkaUtil.getKafkaProducer(orderWideSinkTopic));
+        orderWideWithCategory3DS.map(JSON::toJSONString).addSink(MyKafkaUtil.getKafkaProducer(orderWideSinkTopic));
 
         // 6. 启动任务
         env.execute("OrderWideApp");
