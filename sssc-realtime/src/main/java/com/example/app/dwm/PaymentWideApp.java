@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 // -> Kafka/Hbase(dwd-dim) -> FlinkApp(redis) -> kafka(DWM)->FlinkApp->kafka(dwm)
 // 程序           mockDB               -> mysql    ->flinkcdc ->kafka(zk) ->BaseDbApp ->kafka/phoenix(zk/hdfs/hbase) -> orderWideApp ->kafka->paymentWideApp ->Kafka
 
+    // 测数据有没有丢，需要在mysql数据库中查 select * from payment_info p join order_detail o on p.order_id = o.order_id;
+
 public class PaymentWideApp {
     public static void main(String[] args) throws Exception {
         // 1. 获取执行环境
