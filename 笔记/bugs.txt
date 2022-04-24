@@ -3,3 +3,5 @@ HiveOnSpark：bug
     解决方案：
         1.换MR引擎
         2.将时间字段由String类型改为Date类型
+
+把SimpleDateFormate时间日期方法类设为成员变量 ，在多线程中使用，线程不安全，因为SimpleDateFormate中的calendar是全局变量
